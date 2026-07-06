@@ -765,9 +765,11 @@ class QwenEmotion:
     def clamp_score(self, value):
         try:
             value = float(value)
-        except (TypeError, ValueError):
-            print(f">> QwenEmotion: non-numeric emotion score {value!r}; defaulting to 0.0")
-            value = 0.0
+        except (TypeError, ValueError) as exc:
+            raise ValueError(
+                f"QwenEmotion returned a non-numeric emotion score {value!r}. "
+                "Please retry the request."
+            ) from exc
         return max(self.min_score, min(self.max_score, value))
 
     def convert(self, content):
